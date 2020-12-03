@@ -37,6 +37,7 @@
           <template v-else>
             <button
               v-if="isFollowed"
+              :disabled="isProcessing"
               type="button"
               class="btn btn-danger"
               @click.stop.prevent="deleteFollowing(user.id)"
@@ -45,6 +46,7 @@
             </button>
             <button
               v-else
+              :disabled="isProcessing"
               type="button"
               class="btn btn-primary"
               @click.stop.prevent="addFollowing(user.id)"
@@ -81,6 +83,7 @@ export default {
   data() {
     return {
       isFollowed: this.initialIsFollowed,
+      isProcessing: false,
     };
   },
   watch: {
@@ -91,12 +94,15 @@ export default {
   methods: {
     async addFollowing(userId) {
       try {
+        this.isProcessing = true;
         const { data } = await usersAPI.addFollowing({ userId });
         if (data.status === "error") {
           throw new Error(data.message);
         }
         this.isFollowed = true;
+        this.isProcessing = false;
       } catch (error) {
+        this.isProcessing = false;
         console.error(error.message);
         Toast.fire({
           icon: "error",
@@ -106,12 +112,15 @@ export default {
     },
     async deleteFollowing(userId) {
       try {
+        this.isProcessing = true;
         const { data } = await usersAPI.deleteFollowing({ userId });
         if (data.status === "error") {
           throw new Error(data.message);
         }
         this.isFollowed = false;
+        this.isProcessing = false;
       } catch (error) {
+        this.isProcessing = false;
         console.error(error.message);
         Toast.fire({
           icon: "error",
