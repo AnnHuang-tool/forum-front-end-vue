@@ -17,7 +17,7 @@
 
       <!-- 分頁標籤 RestaurantPagination -->
       <RestaurantsPagination
-        v-if="totalPage > 1"
+        v-if="totalPage.length > 1"
         :current-page="currentPage"
         :total-page="totalPage"
         :previous-page="previousPage"
